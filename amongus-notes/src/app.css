@@ -1,0 +1,211 @@
+:root {
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 18px/145% var(--sans);
+  color-scheme: dark;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+}
+
+#app {
+  width: 1126px;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* start of css for page */
+.main-layout {
+  display: grid;
+  align-items: flex-start;
+  background-color: black;
+
+  grid-template-columns: 256px 256px 256px;
+  grid-template-rows: 448px 192px;
+  
+  grid-template-areas: 
+  "box-1 box-2 box-4"
+  "box-1 box-3 box-5"
+}
+
+/* parent element for all grid types */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 64px);
+  grid-auto-rows: 64px/*;
+  min-height: 640px;  
+  min-width: 256px; */
+}
+
+/* default = 2 columns */
+.grid {
+  grid-template-columns: repeat(2, 64px);
+}
+
+/* medium = 3 columns */
+@media (min-width: 600px) {
+  .grid {
+    grid-template-columns: repeat(3, 64px);
+  }
+}
+
+/* large = 4 columns */
+@media (min-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(4, 64px);
+  }
+}
+
+.colour-grid {
+  background-color: #1a1a1a;
+}
+
+.noted-grid {
+  background-color: #2a2a2a;
+
+  grid-template-columns: 64px 64px 64px 64px;
+  grid-template-rows: 64px 96px 96px 96px 96px;
+}
+
+.notes-grid {
+  background-color: #1a1a1a;
+  grid-template-columns: 256px;
+  grid-template-rows: 64px 128px;
+}
+
+.interface-grid {
+  background-color: #1a1a1a;
+  grid-template-columns: 64px 64px 64px 64px;
+  grid-template-rows: 64px 64px;
+}
+
+.colour-card {
+  width: 64px;
+  height: 64px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding-top: 0.25rem;
+}
+
+/* contained within colour card element */
+.colour-card img {
+  justify-self: center;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.image-wrapper {
+  display: grid;
+  position: relative;
+
+  width: 64px;
+  height: 96px;
+
+  grid-template-columns: 32px 32px 32px;
+  grid-template-rows: 32px 32px 32px;
+
+  grid-template-areas: 
+  "img-box img-box img-box"
+  "img-box img-box img-box"
+  "dropdown-box dropdown-box vent-box";
+}
+
+.notes-btn {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+
+  width: 32px;
+  height: 32px;
+
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  background-image: url('/assets/icons/Notes_Empty.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  background-color: transparent;
+}
+
+.colour-notes {
+  margin-top: 25px;
+  background-color: black;
+  width: 25%;
+}
+
+.notes-input {
+  flex: 1;
+
+  width: 100%;
+
+  resize: none;
+
+  background-color: black;
+  color: white;
+
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.interface-grid img {
+  justify-self: center;
+  height: 64px;
+  width: 64px;
+}
+
+/* image hovering */
+.colour-grid img:hover {
+  padding: 1px;
+  height: 90%;
+  width: 90%
+}
+
+.interface-grid img:hover {
+  padding: 1px;
+  height: 90%;
+  width: 90%
+}
+
+/*
+.colour-grid img:hover {
+background-color: #404040;
+}
+*/
+
+.status-select {
+  font-size: 12px;
+  width: 64px;
+  background: rgb(0, 0, 0);
+  color: white;
+  border-left-style: none;
+  border-top-style: none
+}
+
+.lobby-settings-grid {
+  background-color: #1a1a1a;
+  color: white;
+
+  grid-template-columns: 256px;
+  grid-template-rows: 64px 32px 32px 32px 32px 32px 32px 32px 32px 32px 32px 32px 32px 32px 32px;
+}
+
+
+
