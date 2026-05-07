@@ -17,9 +17,24 @@
     return {
       name,
       src: module.default,
-      note: ""
+      note: "",
+      vented: false
     };
   });
+
+  // track number of people seen venting to compare against engineer count
+  let venters = 0
+  let engineers = 0
+
+  // track roles
+  let guardians = false
+  let scientists = false
+  let detectives = false
+  let noisemakers = false
+  let trackers = false
+  let shapeshifters = false
+  let vipers = false
+  let phantoms = false
 
   // track dragged colour and source grid 
   let draggedColour = null
@@ -65,6 +80,13 @@
         noted = [...noted, copy];
       }
     }
+
+    // reduce venter count if dragged colour was someone who vented
+    if (targetGrid === 'colourGrid') {
+      if (draggedColour.vented) {
+        venters -= 1
+      }
+    }
   }
 
   // colour notes
@@ -88,6 +110,7 @@
     noted = []
     document.getElementById("noteText").value = ""
     selectedColour = null
+    venters = 0
   }
 
   // map selection
@@ -100,12 +123,12 @@
 <!-- main grid containing multiple grids -->
 <div class="main-layout">
 
-  <!-- don't need to pass anything for drop here, just let it happen with no arguments to clear from source-->
+  <!-- need to pass arguments to be able to reduce venter count-->
   <div 
     class="grid colour-grid"
     style="grid-area: box-1"
     on:dragover={(event) => event.preventDefault()}
-    on:drop={() => handleDrop()}
+    on:drop={(event) => handleDrop(event, 'colourGrid')}
   >
 
     <h3>Colour Picker</h3>
@@ -143,9 +166,24 @@
           />
         </div>
 
+        <!-- can't put {#if} directly into image opening tag -->
+        <!-- do it like this with ternary expression instead-->
         <img 
-          src="/assets/icons/vented_default.png" alt=""
-          style="height: 32px; width: 32px; justify-self:center"
+          src={!colour.vented 
+            ? "/assets/icons/engineer_false.png"
+            : "/assets/icons/engineer.png"}
+          alt=""
+          style="height: 32px; width: 32px; justify-self: center;"
+
+          on:click={() => {
+            if (colour.vented){
+              colour.vented = false;
+              venters -= 1;
+            } else {
+              colour.vented = true;
+              venters += 1;
+            }
+          }}
         >
 
         <select
@@ -189,7 +227,7 @@
       <!--automatically writes changes with event-->
       <textarea
         class="notes-input"
-        placeholder={`Select colour in noted panel to start typing \n \nYour notes for ${selectedColour?.name || 'Colour'}...`}
+        placeholder={`Select colour in noted panel to start typing...`}
         id="noteText"
         spellcheck="false"
         on:change={() => writeNote()}
@@ -200,50 +238,184 @@
     class="grid lobby-settings-grid"
     style="grid-area: box-4"
   >
-    <h3>Lobby Settings</h3>
+    <h3 style="grid-area: lobby-settings-label">Lobby Settings</h3>
 
-    <div>
-      <label for="imposters">Imposters:</label>
-      <input type="number" id="imposters" name="imposters" min="1" max="3">
-    </div>
-    <div>
-      <label for="anonymous">Anonymous Votes:</label>
-      <input type="checkbox" id="anonymous" name="anonymous">
-    </div>
-    <div>
-      <label for="confirmations">Confirm Ejects:</label>
-      <input type="checkbox" id="confirmations" name="confirmations">
-    </div>
-    <div>
-      <label for="visuals">Visual Tasks:</label>
-      <input type="checkbox" id="visuals" name="visuals">
-    </div>
-    <div>
-      <label for="engineers">Engineers:</label>
-      <input type="number" id="engineers" name="engineers" min="1" max="15">
-    </div>
-    <div>
-      <label for="shapeshifters">Shapeshifters:</label>
-      <input type="number" id="shapeshifters" name="shapeshifters" min="1" max="15">
-    </div>
-    <div>
-      <label for="vipers">Vipers:</label>
-      <input type="number" id="vipers" name="vipers" min="1" max="15">
-    </div>
-    <div>
-      <label for="guardians">Guardian Angles:</label>
-      <input type="number" id="guardians" name="guardians" min="1" max="15">
-    </div>
-    <div>
-      <label for="scientists">Scientists:</label>
-      <input type="checkbox" id="scientists" name="scientists">
-    </div>
-    <div>
-      <label for="detectives">Detectives:</label>
-      <input type="checkbox" id="detectives" name="detectives">
-    </div>
+      <!-- Imposters-->
+      <label 
+        style="grid-area: imp-label"
+        for="imposters">Imposters
+      </label>
+
+      <input 
+        style="grid-area: imp-input; width: 64px"
+        type="number" id="imposters" name="imposters" min="0" max="3"
+      >
+
+      <!-- Anonymous Votes-->
+      <label 
+        style="grid-area: anonymous-label"
+        for="anonymous">Anonymous Votes
+      </label>
+
+      <input 
+        style="grid-area: anonymous-input"
+        type="checkbox" id="anonymous" name="anonymous"
+      >
+
+      <!-- Confirm Ejects-->
+      <label 
+        style="grid-area: ejects-label"
+        for="ejects">Confirm Ejects
+      </label>
+
+      <input 
+        style="grid-area: ejects-input"
+        type="checkbox" id="ejects" name="ejects"
+      >
+
+      <!-- Visual tasks-->
+      <label 
+        style="grid-area: visuals-label"
+        for="visuals">Visual Tasks
+      </label>
+
+      <input 
+        style="grid-area: visuals-input"
+        type="checkbox" id="visuals" name="visuals"
+      >
+
+      <!-- Taskbar Updates -->
+      <label
+        style="grid-area: tasks-label"
+        for="tasks"
+      >
+        Taskbar Updates
+      </label>
+
+      <select
+        style="grid-area: tasks-input"
+        id="tasks" name="tasks"
+      >
+        <option value="always">Always</option>
+        <option value="never">None</option>
+        <option value="meetings">Meetings</option>
+      </select>
+
+      <!-- Vent cooldown-->
+      <label 
+        style="grid-area: vent-cooldown-label"
+        for="vent-cooldown">Vent Cooldown
+      </label>
+
+      <input 
+        style="grid-area: vent-cooldown-input; width: 64px"
+        type="number" id="vent-cooldown" name="vent-cooldown" min="5" max="60" step="5"
+        disabled={engineers === 0}
+      >
   </div>
 
+
+  <div
+    class="grid roles-grid"
+    style="grid-area: box-6"
+  >
+    <h3>Roles</h3>
+
+    <!-- Engineer-->
+    <!-- automatically becomes 1 if image is clicked and back to 0 if clicked again-->
+    <img 
+      src={engineers === 0 ? "/assets/icons/engineer_false.png" : "/assets/icons/engineer.png"} 
+      alt=""
+      on:click={() => engineers = engineers === 0 ? 1 : 0}
+      style="width: 64px; height: 64px"
+    >
+
+    <input
+      type="number" id="engineers" name="engineers" min="0" max="15"
+      bind:value={engineers}
+      style="border-bottom-right-radius: 1rem; font-size:xx-large; text-align: center"
+    >
+
+    <!-- Venters-->
+    <!-- turns red if there are more venters spotted than there are engineers set-->
+    <div
+      style="
+        padding-top: 8px;
+        background-color: {venters > engineers ? 'red' : '#3a3a3a'};
+        color: white;
+        border-bottom-left-radius: 1rem;
+        font-size: xx-large;
+        text-align: center;
+      "
+    >
+      {venters}
+    </div>
+
+    <img 
+      src={venters === 0 ? "/assets/icons/venter_false.png" : "/assets/icons/venter.png"} 
+      alt=""
+      on:click={() => engineers = engineers === 0 ? 1 : 0}
+      style="width: 64px; height: 64px"
+    >
+
+    <!-- Phantom-->
+    <img 
+      src={!phantoms ? "/assets/icons/phantom_false.png" : "/assets/icons/phantom.png"} 
+      alt=""
+      on:click={() => phantoms = !phantoms}
+    >
+
+    <!-- Viper-->
+    <img 
+      src={!vipers ? "/assets/icons/viper_false.png" : "/assets/icons/viper.png"} 
+      alt=""
+      on:click={() => vipers = !vipers}
+    >
+
+    <!-- Guardian Angel-->
+    <img 
+      src={!guardians ? "/assets/icons/guardian_false.png" : "/assets/icons/guardian.png"} 
+      alt=""
+      on:click={() => guardians = !guardians}
+    >
+
+    <!-- Shapeshifter-->
+    <img 
+      src={!shapeshifters ? "/assets/icons/shapeshifter_false.png" : "/assets/icons/shapeshifter.png"} 
+      alt=""
+      on:click={() => shapeshifters = !shapeshifters}
+    >
+
+    <!-- Scientist-->
+    <img 
+      src={!scientists ? "/assets/icons/scientist_false.png" : "/assets/icons/scientist.png"} 
+      alt=""
+      on:click={() => scientists = !scientists}
+    >
+
+
+    <!-- Detective-->
+    <img 
+      src={!detectives ? "/assets/icons/detective_false.png" : "/assets/icons/detective.png"} 
+      alt=""
+      on:click={() => detectives = !detectives}
+    >
+
+    <!-- Noisemaker-->
+    <img 
+      src={!noisemakers ? "/assets/icons/noisemaker_false.png" : "/assets/icons/noisemaker.png"} 
+      alt=""
+      on:click={() => noisemakers = !noisemakers}
+    >
+
+    <!-- Tracker-->
+    <img 
+      src={!trackers ? "/assets/icons/tracker_false.png" : "/assets/icons/tracker.png"} 
+      alt=""
+      on:click={() => trackers = !trackers}
+    >
+
+  </div>
   <div 
     class="grid interface-grid"
     style="grid-area: box-5"
@@ -285,24 +457,25 @@
         on:click={() => selectMap("submerged")}
       >
   </div>
-</div>
 
   <div 
-    class="grid map-grid"
-    style="grid-area: box-5"
+    class="grid options-grid"
+    style="grid-area: box-7;"
   >
+    <h3>Opt</h3>
 
+    <img 
+      src="/assets/icons/play_again.png" alt=""
+      style="width: 64px; height: 64px; border-style: inset; border-color: white"
+      on:click={() => reset()}
+    >
 
-      <img src="/assets/maps/skeld_layout.png" alt="">
+    <img 
+      src="" alt=""
+      style="width: 64px; height: 64px; border-style: inset; border-color: white"
+    >
   </div>
-
-        <button class="reset-btn"
-      on:click={() => reset()}>
-      Reset
-    </button>
-
-
-
+</div>
 
 <style>
 /* can't move this to app.css for some reason */
@@ -316,6 +489,8 @@ h3 {
 
   color: white;
   background-color: black;
+
+  border-style:inset;
   
   font-family: "VCR_OSD_MONO";
   src: url("/assets/fonts/VCR_OSD_MONO.tff") format("truetype");
