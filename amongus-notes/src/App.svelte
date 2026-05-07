@@ -22,7 +22,7 @@
 
   // create easily indexable array of colours 
   // map file name and source to name and path for each colour within array
-  let colours = Object.entries(colourImages).map(([path, module]) => {
+  let base_colours = Object.entries(colourImages).map(([path, module]) => {
     const name = path.split('/').pop().replace('.png', '');
 
     // each colour will have a name and source file path
@@ -60,9 +60,22 @@
     };
   });
 
-  // Add modded colour array to the base colour array
-  let moddedColours = tou_colours
-  colours = colours.concat(moddedColours);
+  // Generate final colour array based on user selected value
+  // reacts automatically
+  let selectedMod = "none"
+
+  // set colours to = result of this if statement block return
+  $: colours = (() => {
+    if (selectedMod === "tor") {
+      return [...base_colours, ...tor_colours];
+    }
+
+    if (selectedMod === "tou") {
+      return [...base_colours, ...tou_colours];
+    }
+
+    return base_colours;
+  })();
 
   // track number of people seen venting to compare against engineer count
   let venters = 0
@@ -369,13 +382,13 @@
       src={engineers === 0 ? "/assets/icons/engineer_false.png" : "/assets/icons/engineer.png"} 
       alt=""
       on:click={() => engineers = engineers === 0 ? 1 : 0}
-      style="width: 64px; height: 64px"
+      style="width: 64px; height: 64px; background-color: blue"
     >
 
     <input
       type="number" id="engineers" name="engineers" min="0" max="15"
       bind:value={engineers}
-      style="border-bottom-right-radius: 1rem; font-size:xx-large; text-align: center"
+      style="border-bottom-right-radius: 1rem; font-size:xx-large; text-align: center; background-color: blue"
     >
 
     <!-- Venters-->
@@ -397,7 +410,7 @@
       src={venters === 0 ? "/assets/icons/venter_false.png" : "/assets/icons/venter.png"} 
       alt=""
       on:click={() => engineers = engineers === 0 ? 1 : 0}
-      style="width: 64px; height: 64px"
+      style="width: 64px; height: 64px; background-color: #3a3a3a"
     >
 
     <!-- Phantom-->
@@ -512,10 +525,15 @@
       on:click={() => reset()}
     >
 
-    <img 
-      src="" alt=""
+
+    <select
+      bind:value={selectedMod}
       style="width: 64px; height: 64px; border-style: inset; border-color: white"
     >
+      <option value="none">None</option>
+      <option value="tor">TOR</option>
+      <option value="tou">TOU</option>
+    </select>
   </div>
 </div>
 
