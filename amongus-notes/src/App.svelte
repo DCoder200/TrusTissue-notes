@@ -8,9 +8,21 @@
 	  { eager: true }
   )
 
+  // TOR colours 
+  const torColourImages = import.meta.glob(
+    './assets/tor_colours/*.png',
+    { eager: true }
+  );
+
+  // TOU colours 
+  const touColourImages = import.meta.glob(
+    './assets/tou_colours/*.png',
+    { eager: true }
+  );
+
   // create easily indexable array of colours 
   // map file name and source to name and path for each colour within array
-  const colours = Object.entries(colourImages).map(([path, module]) => {
+  let colours = Object.entries(colourImages).map(([path, module]) => {
     const name = path.split('/').pop().replace('.png', '');
 
     // each colour will have a name and source file path
@@ -21,6 +33,36 @@
       vented: false
     };
   });
+
+  // The Other Roles colours
+  const tor_colours = Object.entries(torColourImages).map(([path, module]) => {
+    const name = path.split('/').pop().replace('.png', '');
+
+    // each colour will have a name and source file path
+    return {
+      name,
+      src: module.default,
+      note: "",
+      vented: false
+    };
+  });
+
+  // Town Of Us colours
+  const tou_colours = Object.entries(touColourImages).map(([path, module]) => {
+    const name = path.split('/').pop().replace('.png', '');
+
+    // each colour will have a name and source file path
+    return {
+      name,
+      src: module.default,
+      note: "",
+      vented: false
+    };
+  });
+
+  // Add modded colour array to the base colour array
+  let moddedColours = tou_colours
+  colours = colours.concat(moddedColours);
 
   // track number of people seen venting to compare against engineer count
   let venters = 0

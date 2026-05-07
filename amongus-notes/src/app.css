@@ -48,8 +48,12 @@
   grid-auto-rows: 64px;
 }
 
+/* uses scrollbar to contain any number of colours */
 .colour-grid {
   background-color: #1a1a1a;
+  height: 608px;
+
+  overflow-y: auto;
 }
 
 .noted-grid {
@@ -171,12 +175,6 @@
   width: 90%
 }
 
-/*
-.colour-grid img:hover {
-background-color: #404040;
-}
-*/
-
 .status-select {
   font-size: 12px;
   width: 64px;
@@ -261,6 +259,5 @@ label {
   height: 32px;
   width: 32px
 }
-
 
 
