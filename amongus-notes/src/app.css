@@ -14,7 +14,7 @@
 }
 
 #app {
-  width: 768px;
+  width: 1024px;
   max-width: 100%;
   margin: 0 auto;
   text-align: center;
@@ -31,7 +31,7 @@
   align-items: flex-start;
   background-color: black;
 
-  grid-template-columns: 256px 256px 192px 64px;
+  grid-template-columns: 256px 384px 192px 64px;
   grid-template-rows: 224px 224px 160px;
   
   grid-template-areas: 
@@ -59,13 +59,13 @@
 .noted-grid {
   background-color: #2a2a2a;
 
-  grid-template-columns: 64px 64px 64px 64px;
+  grid-template-columns: 96px 96px 96px 96px;
   grid-template-rows: 64px 96px 96px 96px 96px;
 }
 
 .notes-grid {
   background-color: #1a1a1a;
-  grid-template-columns: 256px;
+  grid-template-columns: 384px;
   grid-template-rows: 32px 128px;
 }
 
@@ -83,18 +83,11 @@
 .colour-card {
   width: 64px;
   height: 64px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
   padding-top: 0.25rem;
 }
 
 /* contained within colour card element */
 .colour-card img {
-  justify-self: center;
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -111,53 +104,35 @@
   grid-template-rows: 32px 32px 32px;
 
   grid-template-areas: 
-  "img-box img-box img-box"
-  "img-box img-box img-box"
-  "dropdown-box dropdown-box vent-box";
+  "img-box img-box box-alignment"
+  "img-box img-box box-alignment"
+  "dropdown-box dropdown-box dropdown-box";
 }
 
-.notes-btn {
-  position: absolute;
-  top: 2px;
-  right: 2px;
-
-  width: 32px;
-  height: 32px;
-
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-
-  background-image: url('/assets/icons/Notes_Empty.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-
-  background-color: transparent;
+.role-img {
+  width: 64px;
+  height: 64px
 }
 
-.colour-notes {
-  margin-top: 25px;
-  background-color: black;
-  width: 25%;
+.alignment-grid {
+  grid-template-columns: 32px;
+  grid-template-rows: 32px 32px;
+  background-color: red;
+}
+
+.alignment-item {
+  border-right-style: inset;
+  border-color: #b5b5b5;
 }
 
 .notes-input {
-  flex: 1;
-
-  width: 100%;
-
-  resize: none;
-
   background-color: black;
   color: white;
-
   font-size: 1rem;
   font-weight: 600;
 }
 
 .interface-grid img {
-  justify-self: center;
   height: 64px;
   width: 64px;
 }
@@ -177,11 +152,14 @@
 
 .status-select {
   font-size: 12px;
-  width: 64px;
+  width: 96px;
   background: rgb(0, 0, 0);
   color: white;
   border-top-style: none;
-  border-bottom-right-radius: 1rem;
+  border-left-style: none;
+
+  border-color: #b5b5b5;
+
 
 }
 
@@ -203,12 +181,7 @@
 }
 
 .roles-grid {
-  grid-template-areas: 
-  "lobby-settings-label lobby-settings-label lobby-settings-label"
-  "imp-input imp-image imp-label"
-  "anonymous-input anonymous-label anonymous-label"
-  "ejects-input ejects-label ejects-label"
-  "visuals-input visuals-label visuals-label";
+  background-color: black;
 }
 
 .roles-grid input {
@@ -260,4 +233,28 @@ label {
   width: 32px
 }
 
+.option-btn {
+  width: 64px; 
+  height: 64px; 
+  border-style: inset; 
+  border-color: white
+}
+
+.mod-options {
+  appearance: none;
+
+  /* hide text and bg colour shift */
+  color: transparent;
+  background-color: transparent;
+  border-top-style: none;
+
+  background-image: url("/assets/icons/add_mod.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.mod-options:hover{
+  background-color: white;
+}
 

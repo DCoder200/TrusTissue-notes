@@ -1,6 +1,5 @@
 <script>
   import 'bootstrap/dist/css/bootstrap.min.css';
-	import 'bootstrap-icons/font/bootstrap-icons.min.css';
 
   // import all colour images as a meta glob
   const colourImages = import.meta.glob(
@@ -29,6 +28,7 @@
     return {
       name,
       src: module.default,
+      alignment: "none",
       note: "",
       vented: false
     };
@@ -42,6 +42,7 @@
     return {
       name,
       src: module.default,
+      alignment: "none",
       note: "",
       vented: false
     };
@@ -55,16 +56,17 @@
     return {
       name,
       src: module.default,
+      alignment: "none",
       note: "",
       vented: false
     };
   });
 
-  // Generate final colour array based on user selected value
-  // reacts automatically
+  // Generate final colour array based on user selected value, reactive
   let selectedMod = "none"
 
   // set colours to = result of this if statement block return
+  // this is good because it makes the variable 100% derived from the bound value with no outside initialisation
   $: colours = (() => {
     if (selectedMod === "tor") {
       return [...base_colours, ...tor_colours];
@@ -77,19 +79,26 @@
     return base_colours;
   })();
 
+  // Alignment colours 
+  // becomes the correct colour for whatever argument is added
+  const alignmentColours = {
+    imposter: {
+      base: "rgb(250, 26, 25",
+      dark: "rgb(125, 13, 17)"
+    },
+    crew: {
+      base: "rgb(138, 254, 252)",
+      dark: "rgb(69, 127, 126)"
+    },
+    neutral: {
+      base: "rgb(255, 0, 255)",
+      dark: "rgb(128, 0, 128"
+    }
+  };
+
   // track number of people seen venting to compare against engineer count
   let venters = 0
   let engineers = 0
-
-  // track roles
-  let guardians = false
-  let scientists = false
-  let detectives = false
-  let noisemakers = false
-  let trackers = false
-  let shapeshifters = false
-  let vipers = false
-  let phantoms = false
 
   // track dragged colour and source grid 
   let draggedColour = null
@@ -225,8 +234,8 @@
         <!-- do it like this with ternary expression instead-->
         <img 
           src={!colour.vented 
-            ? "/assets/icons/engineer_false.png"
-            : "/assets/icons/engineer.png"}
+            ? "/assets/icons/venter_false.png"
+            : "/assets/icons/venter.png"}
           alt=""
           style="height: 32px; width: 32px; justify-self: center;"
 
@@ -241,33 +250,60 @@
           }}
         >
 
+        <!-- bound to role alignment of card, will automatically change background to base colour-->
         <select
-        class="status-select"
-        style="grid-area: dropdown-box"
-        on:change={(event) => {
-          const value = event.target.value;
-          const wrapper = event.currentTarget.parentElement;
-          const card = wrapper.querySelector('.colour-card');
+          class="status-select"
+          style="grid-area: dropdown-box"
+          bind:value={colour.alignment}
 
-          if (value === 'sus') {
-            card.style.backgroundColor = '#5a3a3a';
-          } else if (value === 'soft-clear') {
-            card.style.backgroundColor = 'rgb(190, 220, 80)';
-          } else if (value === 'hard-clear') {
-            card.style.backgroundColor = 'rgb(0, 255, 0)';
-          } else if (value === 'imposter') {
-            card.style.backgroundColor = 'rgb(255, 0, 0';
-          } else {
-            card.style.backgroundColor = '';
-          }
-        }}
+          on:change={(event) => {
+            const wrapper = event.currentTarget.parentElement;
+            const card = wrapper.querySelector('.colour-card');
+
+            card.style.backgroundColor = alignmentColours[colour.alignment]?.base;
+          }}
+        >
+          <option value="none">None</option>
+          <option value="crew">Crew</option>
+
+          <!-- Only display neutral if mod is being used-->
+          {#if selectedMod != "none"}
+            <option value="neutral">Neutral</option>
+          {/if}
+
+          <option value="imposter">Imposter</option>
+        </select>
+
+      <div 
+        class="grid alignment-grid"
+        style="grid-area: box-alignment"
       >
-        <option value="">None</option>
-        <option value="sus">Suspect</option>
-        <option value="soft-clear">Soft Clear</option>
-        <option value="hard-clear">Hard Clear</option>
-        <option value="imposter">Imposter</option>
-      </select>
+        <div
+          class="alignment-item"
+          style:background-color={alignmentColours[colour.alignment]?.base ?? "black"}
+
+          on:click={(event) => {
+            const wrapper = event.currentTarget.parentElement?.parentElement
+            const card = wrapper.querySelector('.colour-card')
+
+            card.style.backgroundColor = alignmentColours[colour.alignment]?.base
+          }}
+        >
+        </div>
+
+        <div
+          class="alignment-item"
+          style:background-color={alignmentColours[colour.alignment]?.dark ?? "black"}
+
+          on:click={(event) => {
+          const wrapper = event.currentTarget.parentElement?.parentElement
+          const card = wrapper.querySelector('.colour-card')
+
+          card.style.backgroundColor = alignmentColours[colour.alignment]?.dark
+        }}
+        >
+        </div>
+      </div>
     </div>
     {/each}
   </div>
@@ -280,12 +316,21 @@
     <h3>Notes for {selectedColour?.name || 'Colour'}</h3>
 
       <!--automatically writes changes with event-->
+      <!-- also saves and exits by intercepting return-->
       <textarea
         class="notes-input"
         placeholder={`Select colour in noted panel to start typing...`}
         id="noteText"
         spellcheck="false"
         on:change={() => writeNote()}
+
+        on:keydown={(event) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+          event.preventDefault();
+          writeNote();
+          event.currentTarget.blur(); // exit typing
+        }
+      }}
       ></textarea>
   </div>
 
@@ -303,7 +348,7 @@
 
       <input 
         style="grid-area: imp-input; width: 64px"
-        type="number" id="imposters" name="imposters" min="0" max="3"
+        type="number" id="imposters" name="imposters" min="0" max="5"
       >
 
       <!-- Anonymous Votes-->
@@ -379,16 +424,22 @@
     <!-- Engineer-->
     <!-- automatically becomes 1 if image is clicked and back to 0 if clicked again-->
     <img 
-      src={engineers === 0 ? "/assets/icons/engineer_false.png" : "/assets/icons/engineer.png"} 
+      src={engineers === 0 ? "/assets/icons/engineer.png" : "/assets/icons/engineer.png"} 
       alt=""
-      on:click={() => engineers = engineers === 0 ? 1 : 0}
-      style="width: 64px; height: 64px; background-color: blue"
+      style="width: 64px; height: 64px"
+
+      on:click={(event) => {
+        engineers = engineers === 0 ? 1 : 0;
+
+        event.currentTarget.style.backgroundColor =
+          engineers === 0 ? "transparent" : "blue";
+      }}
     >
 
     <input
       type="number" id="engineers" name="engineers" min="0" max="15"
       bind:value={engineers}
-      style="border-bottom-right-radius: 1rem; font-size:xx-large; text-align: center; background-color: blue"
+      style="font-size:xx-large; text-align: center; background-color: {engineers != 0 ? 'blue' : 'transparent'}; border-left-style: none; border-bottom-style: none; border-top-style: none"
     >
 
     <!-- Venters-->
@@ -398,7 +449,6 @@
         padding-top: 8px;
         background-color: {venters > engineers ? 'red' : '#3a3a3a'};
         color: white;
-        border-bottom-left-radius: 1rem;
         font-size: xx-large;
         text-align: center;
       "
@@ -406,68 +456,129 @@
       {venters}
     </div>
 
+    <!-- also change background colour of the image for the same condition-->
     <img 
       src={venters === 0 ? "/assets/icons/venter_false.png" : "/assets/icons/venter.png"} 
       alt=""
       on:click={() => engineers = engineers === 0 ? 1 : 0}
-      style="width: 64px; height: 64px; background-color: #3a3a3a"
+      style="
+        width: 64px; 
+        height: 64px;
+        background-color: {venters > engineers ? 'red' : '#3a3a3a'};
+      "
     >
 
-    <!-- Phantom-->
+    <!-- The rest are dumb toggles just to visually display that the roles are ingame-->
+    <!-- Guardian Angel-->
     <img 
-      src={!phantoms ? "/assets/icons/phantom_false.png" : "/assets/icons/phantom.png"} 
+      class="role-img"
+      src="/assets/icons/guardian.png"
       alt=""
-      on:click={() => phantoms = !phantoms}
+      
+      on:click={(event) => {
+        event.currentTarget.style.backgroundColor =
+          event.currentTarget.style.backgroundColor === "blue"
+            ? "transparent"
+            : "blue";
+      }}
+    >
+
+    <!-- Trackers-->
+    <img 
+      class="role-img"
+      src="/assets/icons/tracker.png"
+      alt=""
+
+      on:click={(event) => {
+        event.currentTarget.style.backgroundColor =
+          event.currentTarget.style.backgroundColor === "blue"
+            ? "transparent"
+            : "blue";
+      }}
     >
 
     <!-- Viper-->
     <img 
-      src={!vipers ? "/assets/icons/viper_false.png" : "/assets/icons/viper.png"} 
+      class="role-img"
+      src="/assets/icons/viper.png"
       alt=""
-      on:click={() => vipers = !vipers}
-    >
-
-    <!-- Guardian Angel-->
-    <img 
-      src={!guardians ? "/assets/icons/guardian_false.png" : "/assets/icons/guardian.png"} 
-      alt=""
-      on:click={() => guardians = !guardians}
+      
+      on:click={(event) => {
+        event.currentTarget.style.backgroundColor =
+          event.currentTarget.style.backgroundColor === "red"
+            ? "transparent"
+            : "red";
+      }}
     >
 
     <!-- Shapeshifter-->
     <img 
-      src={!shapeshifters ? "/assets/icons/shapeshifter_false.png" : "/assets/icons/shapeshifter.png"} 
+      class="role-img"
+      src="/assets/icons/shapeshifter.png"
       alt=""
-      on:click={() => shapeshifters = !shapeshifters}
+      
+      on:click={(event) => {
+        event.currentTarget.style.backgroundColor =
+          event.currentTarget.style.backgroundColor === "red"
+            ? "transparent"
+            : "red";
+      }}
     >
 
     <!-- Scientist-->
     <img 
-      src={!scientists ? "/assets/icons/scientist_false.png" : "/assets/icons/scientist.png"} 
+      class="role-img"
+      src="/assets/icons/scientist.png"
       alt=""
-      on:click={() => scientists = !scientists}
+      
+      on:click={(event) => {
+        event.currentTarget.style.backgroundColor =
+          event.currentTarget.style.backgroundColor === "blue"
+            ? "transparent"
+            : "blue";
+      }}
     >
-
 
     <!-- Detective-->
     <img 
-      src={!detectives ? "/assets/icons/detective_false.png" : "/assets/icons/detective.png"} 
+      class="role-img"
+      src="/assets/icons/detective.png"
       alt=""
-      on:click={() => detectives = !detectives}
+      
+      on:click={(event) => {
+        event.currentTarget.style.backgroundColor =
+          event.currentTarget.style.backgroundColor === "blue"
+            ? "transparent"
+            : "blue";
+      }}
     >
 
     <!-- Noisemaker-->
     <img 
-      src={!noisemakers ? "/assets/icons/noisemaker_false.png" : "/assets/icons/noisemaker.png"} 
+      class="role-img"
+      src="/assets/icons/noisemaker.png"
       alt=""
-      on:click={() => noisemakers = !noisemakers}
+      
+      on:click={(event) => {
+        event.currentTarget.style.backgroundColor =
+          event.currentTarget.style.backgroundColor === "blue"
+            ? "transparent"
+            : "blue";
+      }}
     >
 
-    <!-- Tracker-->
+    <!-- Phantom-->
     <img 
-      src={!trackers ? "/assets/icons/tracker_false.png" : "/assets/icons/tracker.png"} 
+      class="role-img"
+      src="/assets/icons/phantom.png"
       alt=""
-      on:click={() => trackers = !trackers}
+      
+      on:click={(event) => {
+        event.currentTarget.style.backgroundColor =
+          event.currentTarget.style.backgroundColor === "red"
+            ? "transparent"
+            : "red";
+      }}
     >
 
   </div>
@@ -520,19 +631,21 @@
     <h3>Opt</h3>
 
     <img 
-      src="/assets/icons/play_again.png" alt=""
-      style="width: 64px; height: 64px; border-style: inset; border-color: white"
+      class="option-btn"
+      src="/assets/icons/reset.png" alt=""
       on:click={() => reset()}
     >
 
-
     <select
+      class="option-btn mod-options"
       bind:value={selectedMod}
-      style="width: 64px; height: 64px; border-style: inset; border-color: white"
+      on:change={() => reset()}
     >
+      <img src="/assets/icons/add_mod.png" alt="">
+
       <option value="none">None</option>
       <option value="tor">TOR</option>
-      <option value="tou">TOU</option>
+      <option value="tou">TOU:M</option>
     </select>
   </div>
 </div>
@@ -540,7 +653,6 @@
 <style>
 /* can't move this to app.css for some reason */
 h3 {
-  margin-top: 1rem;
   height: 100%;
 
   display: flex;
@@ -557,7 +669,7 @@ h3 {
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.5px;
-  margin-bottom: 0.75rem;
+
   text-transform: uppercase;
 }
 
