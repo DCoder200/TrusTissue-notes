@@ -83,7 +83,7 @@
   // becomes the correct colour for whatever argument is added
   const alignmentColours = {
     imposter: {
-      base: "rgb(250, 26, 25",
+      base: "red",
       dark: "rgb(125, 13, 17)"
     },
     crew: {
@@ -181,11 +181,38 @@
   function selectMap(mapName){
     console.log(mapName)
   }
+
+  // function to highlight/un-highlight roles in the role panel 
+  function activateRole(event, alignment){
+    let bg_colour;
+    if (alignment == "evil"){
+      bg_colour = "red"
+    } else {
+      bg_colour = "rgb(69, 127, 126)"
+    }
+
+    event.currentTarget.style.backgroundColor =
+      event.currentTarget.style.backgroundColor === bg_colour
+        ? "transparent"
+        : bg_colour;
+  }
 </script>
 
 <!-- start of markdown-->
 <!-- main grid containing multiple grids -->
 <div class="main-layout">
+
+    <!-- Spacer to separate the two colour grids and improve coherency-->
+    <div 
+      class="grid spacer"
+      style="grid-area: box-spacer"
+    >
+      <div class="filler" style="border-top-style: inset; border-left-style: inset"></div>
+      <div class="filler" style="border-left-style: inset;"></div>
+      <div class="filler" style="border-left-style: inset; border-right-style: inset;"></div>
+      <div class="filler" style="border-left-style: inset;"></div>
+      <div class="filler" style="border-style: inset; border-top-style: none"></div>
+    </div>
 
   <!-- need to pass arguments to be able to reduce venter count-->
   <div 
@@ -216,7 +243,7 @@
     on:dragover={(event) => event.preventDefault()}
     on:drop={(event) => handleDrop(event, 'noted')}
   >
-    <h3>Noted</h3>
+    <h3 style="border-left-style: none">Noted</h3>
     {#each noted as colour}
     <div class="grid image-wrapper">
       <div class="colour-card">
@@ -264,7 +291,7 @@
           }}
         >
           <option value="none">None</option>
-          <option value="crew">Crew</option>
+          <option value="crew">Crewmate</option>
 
           <!-- Only display neutral if mod is being used-->
           {#if selectedMod != "none"}
@@ -313,16 +340,18 @@
     style="grid-area: box-3"
   >
 
-    <h3>Notes for {selectedColour?.name || 'Colour'}</h3>
+    <h3 style="border-left-style: none">Notes for {selectedColour?.name || 'Colour'}</h3>
 
       <!--automatically writes changes with event-->
       <!-- also saves and exits by intercepting return-->
+      <!-- doesn't accept default drag and drop behaviour-->
       <textarea
         class="notes-input"
         placeholder={`Select colour in noted panel to start typing...`}
         id="noteText"
         spellcheck="false"
         on:change={() => writeNote()}
+        on:drop={(e) => e.preventDefault()}
 
         on:keydown={(event) => {
         if (event.key === "Enter" && !event.shiftKey) {
@@ -423,23 +452,23 @@
 
     <!-- Engineer-->
     <!-- automatically becomes 1 if image is clicked and back to 0 if clicked again-->
+    <!-- background colour fully derived from whether there are engineers or not-->
     <img 
-      src={engineers === 0 ? "/assets/icons/engineer.png" : "/assets/icons/engineer.png"} 
+      src="/assets/icons/engineer.png"
       alt=""
-      style="width: 64px; height: 64px"
+      style="
+        width: 64px;
+        height: 64px;
+        background-color: {engineers !== 0 ? 'rgb(69, 127, 126)' : 'transparent'};
+      "
+      on:click={() => engineers = engineers === 0 ? 1 : 0}
+      >
 
-      on:click={(event) => {
-        engineers = engineers === 0 ? 1 : 0;
-
-        event.currentTarget.style.backgroundColor =
-          engineers === 0 ? "transparent" : "blue";
-      }}
-    >
-
+    <!--bound to change engineer count-->
     <input
       type="number" id="engineers" name="engineers" min="0" max="15"
       bind:value={engineers}
-      style="font-size:xx-large; text-align: center; background-color: {engineers != 0 ? 'blue' : 'transparent'}; border-left-style: none; border-bottom-style: none; border-top-style: none"
+      style="font-size:xx-large; text-align: center; background-color: {engineers != 0 ? 'rgb(69, 127, 126)' : 'transparent'}; border-style: none"
     >
 
     <!-- Venters-->
@@ -460,7 +489,6 @@
     <img 
       src={venters === 0 ? "/assets/icons/venter_false.png" : "/assets/icons/venter.png"} 
       alt=""
-      on:click={() => engineers = engineers === 0 ? 1 : 0}
       style="
         width: 64px; 
         height: 64px;
@@ -476,10 +504,7 @@
       alt=""
       
       on:click={(event) => {
-        event.currentTarget.style.backgroundColor =
-          event.currentTarget.style.backgroundColor === "blue"
-            ? "transparent"
-            : "blue";
+        activateRole(event, "good")
       }}
     >
 
@@ -490,10 +515,7 @@
       alt=""
 
       on:click={(event) => {
-        event.currentTarget.style.backgroundColor =
-          event.currentTarget.style.backgroundColor === "blue"
-            ? "transparent"
-            : "blue";
+        activateRole(event, "good")
       }}
     >
 
@@ -504,10 +526,7 @@
       alt=""
       
       on:click={(event) => {
-        event.currentTarget.style.backgroundColor =
-          event.currentTarget.style.backgroundColor === "red"
-            ? "transparent"
-            : "red";
+        activateRole(event, "evil")
       }}
     >
 
@@ -518,10 +537,7 @@
       alt=""
       
       on:click={(event) => {
-        event.currentTarget.style.backgroundColor =
-          event.currentTarget.style.backgroundColor === "red"
-            ? "transparent"
-            : "red";
+        activateRole(event, "evil")
       }}
     >
 
@@ -532,10 +548,7 @@
       alt=""
       
       on:click={(event) => {
-        event.currentTarget.style.backgroundColor =
-          event.currentTarget.style.backgroundColor === "blue"
-            ? "transparent"
-            : "blue";
+        activateRole(event, "good")
       }}
     >
 
@@ -546,10 +559,7 @@
       alt=""
       
       on:click={(event) => {
-        event.currentTarget.style.backgroundColor =
-          event.currentTarget.style.backgroundColor === "blue"
-            ? "transparent"
-            : "blue";
+        activateRole(event, "good")
       }}
     >
 
@@ -558,12 +568,9 @@
       class="role-img"
       src="/assets/icons/noisemaker.png"
       alt=""
-      
+
       on:click={(event) => {
-        event.currentTarget.style.backgroundColor =
-          event.currentTarget.style.backgroundColor === "blue"
-            ? "transparent"
-            : "blue";
+        activateRole(event, "good")
       }}
     >
 
@@ -574,10 +581,7 @@
       alt=""
       
       on:click={(event) => {
-        event.currentTarget.style.backgroundColor =
-          event.currentTarget.style.backgroundColor === "red"
-            ? "transparent"
-            : "red";
+        activateRole(event, "evil")
       }}
     >
 
