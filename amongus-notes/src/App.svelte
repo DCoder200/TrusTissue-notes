@@ -170,7 +170,6 @@
 
   // resets positions, clears notes, returns text area placeholder text, unselects colour
   function reset(){
-    console.log("reseting")
     noted = []
     document.getElementById("noteText").value = ""
     selectedColour = null
@@ -214,6 +213,10 @@
       <div class="filler" style="border-style: inset; border-top-style: none"></div>
     </div>
 
+  <!-- Specified header grid areas for scrollable grids-->
+  <h2 style="grid-area: colour-picker-header;">Colour Picker</h2>
+  <h1 style="grid-area: noted-header; border-left-style: none;">Noted</h1>
+
   <!-- need to pass arguments to be able to reduce venter count-->
   <div 
     class="grid colour-grid"
@@ -221,8 +224,7 @@
     on:dragover={(event) => event.preventDefault()}
     on:drop={(event) => handleDrop(event, 'colourGrid')}
   >
-
-    <h3>Colour Picker</h3>
+  
     {#each colours as colour}
       <div class="colour-card">
         <img 
@@ -243,7 +245,7 @@
     on:dragover={(event) => event.preventDefault()}
     on:drop={(event) => handleDrop(event, 'noted')}
   >
-    <h3 style="border-left-style: none">Noted</h3>
+  
     {#each noted as colour}
     <div class="grid image-wrapper">
       <div class="colour-card">
@@ -331,8 +333,10 @@
         >
         </div>
       </div>
-    </div>
+    </div> <!--close image wrapper-->
     {/each}
+
+    <div class="insert-visual"></div>
   </div>
 
   <div 
@@ -340,7 +344,7 @@
     style="grid-area: box-3"
   >
 
-    <h3 style="border-left-style: none">Notes for {selectedColour?.name || 'Colour'}</h3>
+    <h1 style="border-left-style: none">Notes for {selectedColour?.name || 'Colour'}</h1>
 
       <!--automatically writes changes with event-->
       <!-- also saves and exits by intercepting return-->
@@ -367,7 +371,7 @@
     class="grid lobby-settings-grid"
     style="grid-area: box-4"
   >
-    <h3 style="grid-area: lobby-settings-label">Lobby Settings</h3>
+    <h2 style="grid-area: lobby-settings-label">Lobby Settings</h2>
 
       <!-- Imposters-->
       <label 
@@ -448,7 +452,7 @@
     class="grid roles-grid"
     style="grid-area: box-6"
   >
-    <h3>Roles</h3>
+    <h2>Roles</h2>
 
     <!-- Engineer-->
     <!-- automatically becomes 1 if image is clicked and back to 0 if clicked again-->
@@ -590,7 +594,7 @@
     class="grid interface-grid"
     style="grid-area: box-5"
   >
-    <h3>Map</h3>
+    <h2>Map</h2>
       <img 
         class="skeld-btn"
         src="/assets/icons/skeld.png" alt=""
@@ -632,7 +636,7 @@
     class="grid options-grid"
     style="grid-area: box-7;"
   >
-    <h3>Opt</h3>
+    <h2>Opt</h2>
 
     <img 
       class="option-btn"
@@ -656,7 +660,7 @@
 
 <style>
 /* can't move this to app.css for some reason */
-h3 {
+h1 {
   height: 100%;
 
   display: flex;
@@ -667,6 +671,8 @@ h3 {
   background-color: black;
 
   border-style:inset;
+  border-width: 5px;
+  border-color: #3a3a3a;
   
   font-family: "VCR_OSD_MONO";
   src: url("/assets/fonts/VCR_OSD_MONO.tff") format("truetype");
@@ -677,8 +683,27 @@ h3 {
   text-transform: uppercase;
 }
 
+h2 {
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+  background-color: #3a3a3a;
+  
+  font-family: "VCR_OSD_MONO";
+  src: url("/assets/fonts/VCR_OSD_MONO.tff") format("truetype");
+  font-size: medium;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+
+  text-transform: uppercase;
+}
+
 /* written to take up whole 1st row of a grid */
-.grid h3 {
+.grid h2 {
   margin-top: 0;
   grid-column: 1 / -1;
 }

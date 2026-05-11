@@ -31,9 +31,11 @@
   background-color: black;
 
   grid-template-columns: 256px 32px 384px 192px 64px;
-  grid-template-rows: 224px 224px 160px;
+  grid-template-rows: 32px 32px 160px 224px 160px;
   
   grid-template-areas: 
+  "colour-picker-header box-spacer noted-header box-4 box-4"
+  "box-1 box-spacer noted-header box-4 box-4"
   "box-1 box-spacer box-2 box-4 box-4"
   "box-1 box-spacer box-2 box-6 box-6"
   "box-1 box-spacer box-3 box-5 box-7"
@@ -43,14 +45,13 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(4, 64px);
-  grid-template-rows: 32px;
   grid-auto-rows: 64px;
 }
 
 /* Spacer between colour picker and noted colours */
 .spacer {
   grid-template-columns: 32px;
-  grid-template-rows: 32px 29px 390px 26px 132px;
+  grid-template-rows: 21px 38px 394px 22px 133px;
 }
 
 .filler {
@@ -60,7 +61,7 @@
 /* uses scrollbar to contain any number of colours */
 .colour-grid {
   background-color: #1a1a1a;
-  height: 608px;
+  height: 576px;
 
   overflow-y: auto;
 }
@@ -68,8 +69,10 @@
 .noted-grid {
   background-color: #2a2a2a;
 
-  grid-template-columns: 96px 96px 96px 96px;
-  grid-template-rows: 64px 96px 96px 96px 96px;
+  grid-template-columns: repeat(4, 96px);
+  grid-auto-rows: 96px;
+
+  overflow-y: auto;
 }
 
 .notes-grid {
@@ -80,11 +83,13 @@
 
 .interface-grid {
   background-color: #1a1a1a;
-  grid-template-columns: 64px 64px 64px;
+  grid-template-columns: repeat(3, 64px);
   grid-template-rows: 32px 64px;
 }
 
 .options-grid {
+  background-color: #3a3a3a;
+
   grid-template-columns: 64px;
   grid-template-rows: 32px 64px 64px;
 }
@@ -109,13 +114,30 @@
   width: 64px;
   height: 96px;
 
-  grid-template-columns: 32px 32px 32px;
+  grid-template-columns: repeat(3, 32px);
   grid-template-rows: 32px 32px 32px;
 
   grid-template-areas: 
   "img-box img-box box-alignment"
   "img-box img-box box-alignment"
   "dropdown-box dropdown-box dropdown-box";
+}
+
+.insert-visual {
+  background-color: black;
+
+  width: 90%;
+  height: 90%;
+  justify-self: center;
+  align-self: center;
+
+  border-style: dashed;
+  border-color: #3a3a3a;
+
+  background-image: url("/assets/icons/plus.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
 }
 
 .role-img {
@@ -142,7 +164,6 @@
 }
 
 .interface-grid img {
-  background-color: black;
   height: 64px;
   width: 64px;
 }
@@ -153,13 +174,15 @@ img:hover {
 }
 
 .status-select {
-  font-size: 12px;
+  font-size: 15px;
   width: 96px;
+
   background: rgb(0, 0, 0);
   color: white;
+
   border-top-style: none;
   border-left-style: none;
-
+  border-width: 3px;
   border-color: #b5b5b5;
 }
 
@@ -182,6 +205,7 @@ img:hover {
 
 .roles-grid {
   background-color: black;
+  grid-template-rows: 32px;
 }
 
 .roles-grid input {
@@ -191,7 +215,7 @@ img:hover {
 
 /* Used by taskbar updates selector */
 .lobby-settings-grid select {
-  border-style: inset;
+  border-style: none;
   border-bottom-style: none;
   border-color: black;
   background-color: #3a3a3a;
@@ -213,7 +237,7 @@ input[type="checkbox"]:checked {
 
 input[type="number"] {
   appearance: none;
-  border-style: inset;
+  border-style: none;
   border-color: black;
   background-color: #3a3a3a;
   cursor: pointer;
@@ -236,8 +260,6 @@ label {
 .option-btn {
   width: 64px; 
   height: 64px; 
-  border-style: inset; 
-  border-color: white
 }
 
 .mod-options {
@@ -246,7 +268,7 @@ label {
   /* hide text and bg colour shift */
   color: transparent;
   background-color: transparent;
-  border-top-style: none;
+  border-style: none;
 
   background-image: url("/assets/icons/add_mod.png");
   background-repeat: no-repeat;
@@ -256,5 +278,10 @@ label {
 
 .mod-options:hover{
   background-color: white;
+}
+
+.filler {
+  border-width: 5px;
+  border-color: #3a3a3a;
 }
 
