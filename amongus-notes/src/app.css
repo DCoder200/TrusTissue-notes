@@ -8,13 +8,21 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  @media (max-width: 1024px) {
+  @media (max-width: 928px) {
     font-size: 16px;
   }
 }
 
+/* setup custom font */
+@font-face {
+  font-family: "VCR_OSD_MONO";
+  src: url("/assets/fonts/VCR_OSD_MONO.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 #app {
-  width: 1024px;
+  width: 928px;
   max-width: 100%;
   margin: 0 auto;
   text-align: center;
@@ -186,7 +194,7 @@
 /* image for role in roles panel */
 .role-img {
   width: 64px;
-  height: 64px
+  height: 64px;
 }
 
 /* holds the 2 colour shade options when selecting certainty within image wrapper */
@@ -198,7 +206,7 @@
 
 /* box containing single colour option placed within alignment grid */
 .alignment-item {
-  border-right-style: inset;
+  border-right-style: solid;
   border-color: #b5b5b5;
 }
 
@@ -208,6 +216,10 @@
   color: white;
   font-size: 1rem;
   font-weight: 600;
+  border-color: #3a3a3a;
+
+  /* prevent resize */
+  resize: none;
 }
 
 /* map icons */
@@ -219,6 +231,11 @@
 /* image hovering */
 img:hover {
   padding: 2px;
+}
+
+/* prevent default hover behaviour for this specific icon */
+.venter-icon:hover {
+  padding: 0px
 }
 
 /* dropdown for image wrapper cards */
@@ -233,6 +250,17 @@ img:hover {
   border-left-style: none;
   border-width: 3px;
   border-color: #b5b5b5;
+
+  /* add custom background image to right of selects as default appearance was overriden and removed the arrow */
+  background-image: url("/assets/icons/dropdown.png");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+
+  /* override appearances it tries to automatically focr */
+  border-radius: 0px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
 /* holds lobby settings */
@@ -271,14 +299,19 @@ img:hover {
   border-bottom-style: none;
   border-color: black;
   background-color: #3a3a3a;
-  appearance: none;
   font-size: 70%;
+
+  /* override appearances it tries to automatically force */
+  border-radius: 0px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
 /* checkbox inputs */
 input[type="checkbox"] {
   appearance: none;
-  border-style: inset;
+  border-style: solid;
   border-color: #3a3a3a;
   background-color: red;
   cursor: pointer;
@@ -291,16 +324,22 @@ input[type="checkbox"]:checked {
 
 /* number inputs */
 input[type="number"] {
-  appearance: none;
   border-style: none;
   border-color: black;
   background-color: #3a3a3a;
-  cursor: pointer;
+}
+
+input {
+  /* override appearances it tries to automatically force */
+  border-radius: 0px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
 /* labels within lobby settings */
 label {
-  border-style:inset;
+  border-style:solid;
   border-color: #2a2a2a;
   background-color: black;
   text-align: start;
@@ -328,15 +367,21 @@ label {
   background-color: transparent;
   border-style: none;
 
-  background-image: url("/assets/icons/add_mod.png");
+  background-image: url("/assets/icons/settings.png");
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
+
+  /* override appearances it tries to automatically force */
+  border-radius: 0px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
 /* mod options hovering over button */
 .mod-options:hover{
-  background-color: white;
+  background-color: black;
 }
 
 

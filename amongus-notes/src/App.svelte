@@ -107,11 +107,18 @@
   // dynamic lists for grids
   let noted = []
 
-  function handleDragStart(colour, sourceGrid) {
-    // colour corresponds to the element
-    draggedGrid = sourceGrid
-    draggedColour = colour
-  }
+function handleDragStart(event, colour, sourceGrid) {
+  draggedGrid = sourceGrid;
+  draggedColour = colour;
+
+  // need this for drag to properly register with tauri, else the drag is considered invalid
+  event.dataTransfer?.setData(
+    "text/plain",
+    JSON.stringify(colour)
+  );
+
+  event.dataTransfer.effectAllowed = "move";
+}
 
   function handleDragEnd() {
     draggedGrid = null
@@ -206,10 +213,10 @@
       class="grid spacer"
       style="grid-area: box-spacer"
     >
-      <div class="filler" style="border-top-style: inset; border-left-style: inset"></div>
-      <div class="filler" style="border-left-style: inset; border-right-style: inset;"></div>
-      <div class="filler" style="border-left-style: inset;"></div>
-      <div class="filler" style="border-style: inset; border-top-style: none"></div>
+      <div class="filler" style="border-top-style: solid; border-left-style: solid"></div>
+      <div class="filler" style="border-left-style: solid; border-right-style: solid;"></div>
+      <div class="filler" style="border-left-style: solid;"></div>
+      <div class="filler" style="border-style: solid; border-top-style: none"></div>
     </div>
 
   <!-- need to pass arguments to be able to reduce venter count-->
@@ -233,7 +240,7 @@
           src={colour.src} 
           draggable="true"
           alt={colour.name}
-          on:dragstart={() => handleDragStart(colour, 'colourGrid')}
+          on:dragstart={(event) => handleDragStart(event, colour, 'colourGrid')}
           on:dragend={handleDragEnd}
             />
         </div>
@@ -263,7 +270,7 @@
               style="grid-area: img-box"
               src={colour.src} 
               draggable="true"
-              on:dragstart={() => handleDragStart(colour, 'noted')}
+              on:dragstart={(event) => handleDragStart(event, colour, 'noted')}
               on:dragend={handleDragEnd}
               on:click={() => openNotes(colour)}
             />
@@ -483,6 +490,8 @@
           background-color: {engineers !== 0 ? 'rgb(69, 127, 126)' : 'transparent'};
         "
         on:click={() => engineers = engineers === 0 ? 1 : 0}
+
+        draggable="false"
         >
 
       <!--bound to change engineer count-->
@@ -508,6 +517,7 @@
 
       <!-- also change background colour of the image for the same condition-->
       <img 
+        class="venter-icon"
         src={venters === 0 ? "/assets/icons/venter_false.png" : "/assets/icons/venter.png"} 
         alt=""
         style="
@@ -515,6 +525,7 @@
           height: 64px;
           background-color: {venters > engineers ? 'red' : '#3a3a3a'};
         "
+        draggable="false"
       >
 
       <!-- The rest are dumb toggles just to visually display that the roles are ingame-->
@@ -523,6 +534,7 @@
         class="role-img"
         src="/assets/icons/guardian.png"
         alt=""
+        draggable="false"
         
         on:click={(event) => {
           activateRole(event, "good")
@@ -534,6 +546,7 @@
         class="role-img"
         src="/assets/icons/tracker.png"
         alt=""
+        draggable="false"
 
         on:click={(event) => {
           activateRole(event, "good")
@@ -545,6 +558,7 @@
         class="role-img"
         src="/assets/icons/viper.png"
         alt=""
+        draggable="false"
         
         on:click={(event) => {
           activateRole(event, "evil")
@@ -556,6 +570,7 @@
         class="role-img"
         src="/assets/icons/shapeshifter.png"
         alt=""
+        draggable="false"
         
         on:click={(event) => {
           activateRole(event, "evil")
@@ -567,6 +582,7 @@
         class="role-img"
         src="/assets/icons/scientist.png"
         alt=""
+        draggable="false"
         
         on:click={(event) => {
           activateRole(event, "good")
@@ -578,6 +594,7 @@
         class="role-img"
         src="/assets/icons/detective.png"
         alt=""
+        draggable="false"
         
         on:click={(event) => {
           activateRole(event, "good")
@@ -589,6 +606,7 @@
         class="role-img"
         src="/assets/icons/noisemaker.png"
         alt=""
+        draggable="false"
 
         on:click={(event) => {
           activateRole(event, "good")
@@ -600,6 +618,7 @@
         class="role-img"
         src="/assets/icons/phantom.png"
         alt=""
+        draggable="false"
         
         on:click={(event) => {
           activateRole(event, "evil")
@@ -616,36 +635,42 @@
           class="skeld-btn"
           src="/assets/icons/skeld.png" alt=""
           on:click={() => selectMap("skeld")}
+          draggable="false"
         >
 
         <img 
           class="polus-btn"
           src="/assets/icons/polus.png" alt=""
           on:click={() => selectMap("polus")}
+          draggable="false"
         >
 
         <img 
           class="mira-btn"
           src="/assets/icons/mira.png" alt=""
           on:click={() => selectMap("mira")}
+          draggable="false"
         >
 
         <img 
           class="airship-btn"
           src="/assets/icons/airship.png" alt=""
           on:click={() => selectMap("airship")}
+          draggable="false"
         >
 
         <img 
           class="fungle-btn"
           src="/assets/icons/fungle.png" alt=""
           on:click={() => selectMap("fungle")}
+          draggable="false"
         >
 
         <img 
           class="submerged-btn"
           src="/assets/icons/submerged.png" alt=""
           on:click={() => selectMap("submerged")}
+          draggable="false"
         >
     </div>
 
@@ -659,6 +684,8 @@
         class="option-btn"
         src="/assets/icons/reset.png" alt=""
         on:click={() => reset()}
+
+        draggable="false"
       >
 
       <select
@@ -688,12 +715,12 @@ h1 {
   color: white;
   background-color: black;
 
-  border-style:inset;
+  border-style:solid;
   border-width: 5px;
   border-color: #3a3a3a;
   
   font-family: "VCR_OSD_MONO";
-  src: url("/assets/fonts/VCR_OSD_MONO.tff") format("truetype");
+  src: url("/assets/fonts/VCR_OSD_MONO.ttf") format("truetype");
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.5px;
@@ -715,7 +742,7 @@ h2 {
   src: url("/assets/fonts/VCR_OSD_MONO.tff") format("truetype");
   font-size: medium;
   font-weight: 600;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
 
   text-transform: uppercase;
 }
