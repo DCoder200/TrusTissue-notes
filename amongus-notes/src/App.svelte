@@ -107,26 +107,13 @@
   // dynamic lists for grids
   let noted = []
 
-function handleDragStart(event, colour, sourceGrid) {
-  draggedGrid = sourceGrid;
-  draggedColour = colour;
-
-  // need this for drag to properly register with tauri, else the drag is considered invalid
-  event.dataTransfer?.setData(
-    "text/plain",
-    JSON.stringify(colour)
-  );
-
-  event.dataTransfer.effectAllowed = "move";
-}
-
-  function handleDragEnd() {
-    draggedGrid = null
-    draggedColour = null
+  function handleDragStart(event, colour, sourceGrid) {
+    draggedGrid = sourceGrid;
+    draggedColour = colour;
   }
 
   // droppint into grids
-  function handleDrop(event, targetGrid) {
+  function handleDrop(targetGrid) {
 
     // exit if no dragged colour or source grid is the same as destination grid
     if (!draggedColour || draggedGrid === targetGrid) return;
@@ -143,8 +130,8 @@ function handleDragStart(event, colour, sourceGrid) {
       });
     }
 
-    // add to target grid, max of 16 set
-    if (targetGrid === 'noted' && noted.length < 16) {
+    // add to target grid
+    if (targetGrid === 'noted') {
 
       // check that the dragged colour name is not in the noted array before inserting
       if (!noted.some(colour => colour.name === draggedColour.name)) {
@@ -202,11 +189,56 @@ function handleDragStart(event, colour, sourceGrid) {
         ? "transparent"
         : bg_colour;
   }
+
+  // detect mouse up events
+  function handleDragEnd(event) {
+    const element = event.target
+
+    // see which string the target class contains and pass simple strings to original drop function
+    if (element?.classList.contains("noted-grid") || element?.classList.contains("insert-visual")) {
+      handleDrop("noted")
+    } else {
+      handleDrop("colourGrid")
+    }
+
+    draggedGrid = null
+    draggedColour = null
+  }
+
+  // handle mouse movements
+  let mouseX = 0;
+  let mouseY = 0;
+  function handleMouseMove(event) {
+    mouseX = event.clientX;
+    mouseY = event.clientY;
+  }
+
+  // detect mouse movements and mouse releases globally for the whole window, mounts just once 
+  import { onMount } from "svelte";
+  onMount(() => {
+    window.addEventListener("mouseup", handleDragEnd);
+    window.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window.removeEventListener("mouseup", handleDragEnd);
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  });
 </script>
 
 <!-- start of markdown-->
 <!-- main grid containing multiple grids -->
 <div class="main-layout">
+
+  <!-- Render ghost images of dragged colours-->
+  {#if draggedColour}
+    <div
+      class="colour-card drag-ghost"
+      style="left: {mouseX}px; top: {mouseY}px;"
+    >
+      <img src={draggedColour.src} alt="" />
+    </div>
+  {/if}
 
     <!-- Spacer to separate the two colour grids and improve coherency-->
     <div 
@@ -231,17 +263,16 @@ function handleDragStart(event, colour, sourceGrid) {
       class="grid colour-grid"
       style="grid-area: colour-picker"
       on:dragover={(event) => event.preventDefault()}
-      on:drop={(event) => handleDrop(event, 'colourGrid')}
     >
     
       {#each colours as colour}
         <div class="colour-card">
           <img 
           src={colour.src} 
-          draggable="true"
+          draggable="false"
           alt={colour.name}
-          on:dragstart={(event) => handleDragStart(event, colour, 'colourGrid')}
-          on:dragend={handleDragEnd}
+        
+          on:mousedown={(event) => handleDragStart(event, colour, 'colourGrid')}
             />
         </div>
       {/each}
@@ -262,16 +293,15 @@ function handleDragStart(event, colour, sourceGrid) {
       on:dragover={(event) => event.preventDefault()}
       on:drop={(event) => handleDrop(event, 'noted')}
     >
-    
+          
       {#each noted as colour}
       <div class="grid image-wrapper">
         <div class="colour-card">
             <img 
               style="grid-area: img-box"
               src={colour.src} 
-              draggable="true"
-              on:dragstart={(event) => handleDragStart(event, colour, 'noted')}
-              on:dragend={handleDragEnd}
+              draggable="false"
+              on:mousedown={(event) => handleDragStart(event, colour, 'noted')}
               on:click={() => openNotes(colour)}
             />
           </div>
@@ -283,6 +313,7 @@ function handleDragStart(event, colour, sourceGrid) {
               ? "/assets/icons/venter_false.png"
               : "/assets/icons/venter.png"}
             alt=""
+            draggable="false"
             style="height: 32px; width: 32px; justify-self: center;"
 
             on:click={() => {
