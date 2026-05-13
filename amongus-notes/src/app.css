@@ -8,7 +8,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  @media (max-width: 928px) {
+  @media (max-width: 960px) {
     font-size: 16px;
   }
 }
@@ -22,7 +22,7 @@
 }
 
 #app {
-  width: 928px;
+  width: 960px;
   max-width: 100%;
   margin: 0 auto;
   text-align: center;
@@ -38,7 +38,7 @@
 
   background-color: black;
 
-  grid-template-columns: 256px 32px 384px 256px;
+  grid-template-columns: 272px 32px 400px 256px;
   grid-template-rows: 608px;
   
   grid-template-areas: 
@@ -49,7 +49,7 @@
 .left-layout {
   display: grid;
 
-  grid-template-columns: 256px;
+  grid-template-columns: 272px;
   grid-template-rows: 32px 576px;
 
   grid-template-areas:
@@ -61,7 +61,7 @@
 .middle-layout {
   display: grid;
 
-  grid-template-columns: 384px;
+  grid-template-columns: 400px;
   grid-template-rows: 64px 384px 160px;
 
   grid-template-areas: 
@@ -123,7 +123,7 @@
 /* holds per colour notes */
 .notes-grid {
   background-color: #1a1a1a;
-  grid-template-columns: 384px;
+  grid-template-columns: 400px;
   grid-template-rows: 32px 128px;
 }
 
