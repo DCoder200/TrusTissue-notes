@@ -107,9 +107,19 @@
   // dynamic lists for grids
   let noted = []
 
+  let start_x = 0
+  let start_y = 0
+  let mouse_down = false
   function handleDragStart(event, colour, sourceGrid) {
-    draggedGrid = sourceGrid;
-    draggedColour = colour;
+
+    // take note of starting mouse pos
+    start_x = event.clientX
+    start_y = event.clientY
+
+    mouse_down = true
+
+    draggedGrid = sourceGrid
+    draggedColour = colour
   }
 
   // droppint into grids
@@ -118,6 +128,7 @@
     // exit if no dragged colour or source grid is the same as destination grid
     if (!draggedColour || draggedGrid === targetGrid) return;
 
+    // need distinct ID for copy of dragged colour or every colour is treated as one
     const copy = {
       ...draggedColour,
       id: crypto.randomUUID()
@@ -194,23 +205,45 @@
   function handleDragEnd(event) {
     const element = event.target
 
-    // see which string the target class contains and pass simple strings to original drop function
-    if (element?.classList.contains("noted-grid") || element?.classList.contains("insert-visual")) {
-      handleDrop("noted")
-    } else {
-      handleDrop("colourGrid")
+    mouse_down = false
+
+    // only drop if mouse handler detected enough movement
+    if (dragging){
+      // see which string the target class contains and pass simple strings to original drop function
+      if (element?.classList.contains("noted-grid") || element?.classList.contains("insert-visual")) {
+        handleDrop("noted")
+      } else {
+        handleDrop("colourGrid")
+      }
     }
 
+    dragging = false
     draggedGrid = null
     draggedColour = null
+
+    // reset starting positions
+    start_x = 0
+    start_y = 0
   }
 
   // handle mouse movements
-  let mouseX = 0;
-  let mouseY = 0;
+  let mouse_x = 0
+  let mouse_y = 0
+  let dragging = false
   function handleMouseMove(event) {
-    mouseX = event.clientX;
-    mouseY = event.clientY;
+    if (!mouse_down){return}
+
+    mouse_x = event.clientX
+    mouse_y = event.clientY
+
+    // indicate drag is happening if mouse moves far enough from start pos 
+    const dx = mouse_x - start_x
+    const dy = mouse_y - start_y
+    const distance = Math.sqrt(dx * dx + dy * dy)
+
+    if (distance > 5){
+      dragging = true
+    }
   }
 
   // detect mouse movements and mouse releases globally for the whole window, mounts just once 
@@ -231,10 +264,10 @@
 <div class="main-layout">
 
   <!-- Render ghost images of dragged colours-->
-  {#if draggedColour}
+  {#if draggedColour && dragging}
     <div
       class="colour-card drag-ghost"
-      style="left: {mouseX}px; top: {mouseY}px;"
+      style="left: {mouse_x}px; top: {mouse_y}px;"
     >
       <img src={draggedColour.src} alt="" />
     </div>
