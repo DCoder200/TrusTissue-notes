@@ -12,9 +12,11 @@ Planned features include:
 - Modded roles panel that displays every role from your selected mod, potentially draggable onto player cards
 
 Building from source: 
-1. Open terminal in an empty folder and run: ```git clone https://github.com/DCoder200/Among-Us-Notes-Tool.git```
-2. Open the project root with an application such as VS-code or similar and run: ```npm install```
-3. To launch a development app preview run: ```npx tauri dev```
-4. To build the project run: ```npx tauri build``` (executable will be in /src-tauri/targets)
+1. Make sure rust is installed on your system as outlined by Tauri's prerequisites
+2. Open terminal in an empty folder and run: ```git clone https://github.com/DCoder200/Among-Us-Notes-Tool.git```
+3. Open the project root with an application such as VS-code or similar and run: ```npm install```
+4. To launch a development app preview run: ```npx tauri dev```
+5. To build the project run: ```npx tauri build``` (executable will be in /src-tauri/targets)
 
+UI preview:
 <img width="957" height="612" alt="image" src="https://github.com/user-attachments/assets/e90c2a3b-6dde-4b9e-bd2d-bfec723f8f9d" />
