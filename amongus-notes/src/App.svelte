@@ -179,7 +179,7 @@
   function activateRole(event, alignment){
     let bg_colour;
     if (alignment == "evil"){
-      bg_colour = "red"
+      bg_colour = "rgb(125, 13, 17)"
     } else {
       bg_colour = "rgb(69, 127, 126)"
     }
@@ -537,7 +537,7 @@
       <div
         style="
           padding-top: 8px;
-          background-color: {venters > engineers ? 'red' : '#3a3a3a'};
+          background-color: {venters > engineers ? 'rgb(125, 13, 17)' : '#3a3a3a'};
           color: white;
           font-size: xx-large;
           text-align: center;
@@ -554,7 +554,7 @@
         style="
           width: 64px; 
           height: 64px;
-          background-color: {venters > engineers ? 'red' : '#3a3a3a'};
+          background-color: {venters > engineers ? 'rgb(125, 13, 17)' : '#3a3a3a'};
         "
         draggable="false"
       >
