@@ -19,4 +19,5 @@ Building from source:
 5. To build the project run: ```npx tauri build``` (executable will be in /src-tauri/targets)
 
 UI preview:
-<img width="957" height="612" alt="image" src="https://github.com/user-attachments/assets/e90c2a3b-6dde-4b9e-bd2d-bfec723f8f9d" />
+<img width="960" height="604" alt="image" src="https://github.com/user-attachments/assets/e3f0edb7-a6bc-400d-ad99-906afa2c6174" />
+
