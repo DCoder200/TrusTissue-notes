@@ -1,0 +1,113 @@
+/* parent element for all grid types */
+.grid {
+    display: grid;
+    grid-auto-rows: 64px;
+}
+
+/* uses scrollbar to contain any number of colours */
+.colour-grid {
+    grid-template-columns: repeat(4, 64px);
+
+    background-color: #1a1a1a;
+    height: 576px;
+
+    overflow-y: auto;
+}
+
+/* holds noted colour cards */
+.noted-grid {
+    background-color: #2a2a2a;
+
+    grid-template-columns: repeat(4, 96px);
+    grid-auto-rows: 96px;
+
+    overflow-y: auto;
+}
+
+/* holds per colour notes */
+.notes-grid {
+    background-color: #1a1a1a;
+    grid-template-columns: 400px;
+    grid-template-rows: 32px 128px;
+}
+
+/* holds map grid */
+.map-grid {
+    background-color: #1a1a1a;
+    grid-template-columns: repeat(3, 64px);
+    grid-template-rows: 32px 64px;
+    }
+
+/* map icons */
+.map-grid img {
+    height: 64px;
+    width: 64px;
+}
+
+.map-btn {
+    border-style: none;
+    width: 64px;
+    height: 64px;
+}
+
+/* holds settings */
+.options-grid {
+    background-color: #3a3a3a;
+
+    grid-template-columns: 64px;
+    grid-template-rows: 32px 64px 64px;
+}
+
+/* holds the 2 colour shade options when selecting certainty within image wrapper */
+.alignment-grid {
+    grid-template-columns: 32px;
+    grid-template-rows: 32px 32px;
+    background-color: red;
+}
+
+/* box containing single colour option placed within alignment grid */
+.alignment-item {
+    border-right-style: solid;
+    border-color: #b5b5b5;
+}
+
+/* holds lobby settings */
+.lobby-settings-grid {
+    background-color: #1a1a1a;
+    color: white;
+
+    grid-template-columns: 128px 64px 32px 32px;
+    grid-auto-rows: 32px;
+
+    grid-template-areas: 
+    "lobby-settings-label lobby-settings-label lobby-settings-label lobby-settings-label"
+    "imp-label imp-label imp-input imp-input"
+    "anonymous-label anonymous-label anonymous-label anonymous-input"
+    "ejects-label ejects-label ejects-label ejects-input"
+    "visuals-label visuals-label visuals-label visuals-input"
+    "tasks-label tasks-label tasks-input tasks-input"
+    "vent-cooldown-label vent-cooldown-label vent-cooldown-input vent-cooldown-input";
+}
+
+/* Used by taskbar updates selector */
+.lobby-settings-grid select {
+    border-style: none;
+    border-bottom-style: none;
+    border-color: black;
+    background-color: #3a3a3a;
+    font-size: 70%;
+
+    /* override appearances it tries to automatically force */
+    border-radius: 0px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+/* holds roles */
+.roles-grid {
+    grid-template-columns: repeat(4, 64px);
+    background-color: black;
+    grid-template-rows: 32px;
+}
+

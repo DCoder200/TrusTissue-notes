@@ -1,71 +1,17 @@
 <script>
-  import 'bootstrap/dist/css/bootstrap.min.css';
+  // lists for creating repeated buttons
+  import {roles, maps, setting_toggle } from "./data.js";
 
-  // import all colour images as a meta glob
-  const colourImages = import.meta.glob(
-	  './assets/colours/*.png',
-	  { eager: true }
-  )
+  // all the colour objects
+  import {base_colours, tor_colours, tou_colours, alignmentColours} from "./colours.js"
 
-  // TOR colours 
-  const torColourImages = import.meta.glob(
-    './assets/tor_colours/*.png',
-    { eager: true }
-  );
-
-  // TOU colours 
-  const touColourImages = import.meta.glob(
-    './assets/tou_colours/*.png',
-    { eager: true }
-  );
-
-  // create easily indexable array of colours 
-  // map file name and source to name and path for each colour within array
-  let base_colours = Object.entries(colourImages).map(([path, module]) => {
-    const name = path.split('/').pop().replace('.png', '');
-
-    // each colour will have a name and source file path
-    return {
-      name,
-      src: module.default,
-      alignment: "none",
-      note: "",
-      vented: false
-    };
-  });
-
-  // The Other Roles colours
-  const tor_colours = Object.entries(torColourImages).map(([path, module]) => {
-    const name = path.split('/').pop().replace('.png', '');
-
-    // each colour will have a name and source file path
-    return {
-      name,
-      src: module.default,
-      alignment: "none",
-      note: "",
-      vented: false
-    };
-  });
-
-  // Town Of Us colours
-  const tou_colours = Object.entries(touColourImages).map(([path, module]) => {
-    const name = path.split('/').pop().replace('.png', '');
-
-    // each colour will have a name and source file path
-    return {
-      name,
-      src: module.default,
-      alignment: "none",
-      note: "",
-      vented: false
-    };
-  });
+  // function to highlight role in roles panel and map select
+  import {selectMap, activateRole} from "./misc_functions.js"
 
   // Generate final colour array based on user selected value, reactive
   let selectedMod = "none"
 
-  // set colours to = result of this if statement block return
+  // set colours to = result of this if statement block's return
   // this is good because it makes the variable 100% derived from the bound value with no outside initialisation
   $: colours = (() => {
     if (selectedMod === "tor") {
@@ -79,37 +25,21 @@
     return base_colours;
   })();
 
-  // Alignment colours 
-  // becomes the correct colour for whatever argument is added
-  const alignmentColours = {
-    imposter: {
-      base: "red",
-      dark: "rgb(125, 13, 17)"
-    },
-    crew: {
-      base: "rgb(138, 254, 252)",
-      dark: "rgb(69, 127, 126)"
-    },
-    neutral: {
-      base: "rgb(255, 0, 255)",
-      dark: "rgb(128, 0, 128"
-    }
-  };
-
   // track number of people seen venting to compare against engineer count
   let venters = 0
   let engineers = 0
 
-  // track dragged colour and source grid 
-  let draggedColour = null
-  let draggedGrid = null
-
   // dynamic lists for grids
   let noted = []
+
+  // track dragged colour and source grid
+  let draggedColour = null
+  let draggedGrid = null
 
   let start_x = 0
   let start_y = 0
   let mouse_down = false
+
   function handleDragStart(event, colour, sourceGrid) {
 
     // take note of starting mouse pos
@@ -128,7 +58,8 @@
     // exit if no dragged colour or source grid is the same as destination grid
     if (!draggedColour || draggedGrid === targetGrid) return;
 
-    // need distinct ID for copy of dragged colour or every colour is treated as one
+    // need distinct ID for copy of dragged colour or all colours are treated as the same 
+    // this means dragging one colour back into the colour picker would get rid of all noted colours
     const copy = {
       ...draggedColour,
       id: crypto.randomUUID()
@@ -179,26 +110,6 @@
     document.getElementById("noteText").value = ""
     selectedColour = null
     venters = 0
-  }
-
-  // map selection
-  function selectMap(mapName){
-    console.log(mapName)
-  }
-
-  // function to highlight/un-highlight roles in the role panel 
-  function activateRole(event, alignment){
-    let bg_colour;
-    if (alignment == "evil"){
-      bg_colour = "rgb(125, 13, 17)"
-    } else {
-      bg_colour = "rgb(69, 127, 126)"
-    }
-
-    event.currentTarget.style.backgroundColor =
-      event.currentTarget.style.backgroundColor === bg_colour
-        ? "transparent"
-        : bg_colour;
   }
 
   // detect mouse up events
@@ -425,9 +336,9 @@
       style="grid-area: notes"
     >
 
-      <h1 style="border-left-style: none">Notes for {selectedColour?.name || 'Colour'}</h1>
+      <h1 style="border-left-style: none; font-size: 24px;">Notes for {selectedColour?.name || 'Colour'}</h1>
 
-        <!--automatically writes changes with event-->
+        <!-- automatically writes changes with event-->
         <!-- also saves and exits by intercepting return-->
         <!-- doesn't accept default drag and drop behaviour-->
         <textarea
@@ -472,38 +383,19 @@
           type="number" id="imposters" name="imposters" min="0" max="5"
         >
 
-        <!-- Anonymous Votes-->
-        <label 
-          style="grid-area: anonymous-label"
-          for="anonymous">Anonymous Votes
-        </label>
+        <!-- Each of the dumb toggles -->
+        {#each setting_toggle as toggle}
+          <!-- Anonymous Votes-->
+          <label 
+            style="grid-area: {toggle.id}-label"
+            for=toggle>{toggle.text}
+          </label>
 
-        <input 
-          style="grid-area: anonymous-input"
-          type="checkbox" id="anonymous" name="anonymous"
-        >
-
-        <!-- Confirm Ejects-->
-        <label 
-          style="grid-area: ejects-label"
-          for="ejects">Confirm Ejects
-        </label>
-
-        <input 
-          style="grid-area: ejects-input"
-          type="checkbox" id="ejects" name="ejects"
-        >
-
-        <!-- Visual tasks-->
-        <label 
-          style="grid-area: visuals-label"
-          for="visuals">Visual Tasks
-        </label>
-
-        <input 
-          style="grid-area: visuals-input"
-          type="checkbox" id="visuals" name="visuals"
-        >
+          <input 
+            style="grid-area: {toggle.id}-input"
+            type="checkbox" id={toggle.id} name= {toggle.id}
+          >
+        {/each}
 
         <!-- Taskbar Updates -->
         <label
@@ -512,6 +404,7 @@
         >
           Taskbar Updates
         </label>
+        
 
         <select
           style="grid-area: tasks-input"
@@ -593,101 +486,18 @@
       >
 
       <!-- The rest are dumb toggles just to visually display that the roles are ingame-->
-      <!-- Guardian Angel-->
-      <img 
-        class="role-img"
-        src="/assets/icons/guardian.png"
-        alt=""
-        draggable="false"
-        
-        on:click={(event) => {
-          activateRole(event, "good")
-        }}
-      >
-
-      <!-- Trackers-->
-      <img 
-        class="role-img"
-        src="/assets/icons/tracker.png"
-        alt=""
-        draggable="false"
-
-        on:click={(event) => {
-          activateRole(event, "good")
-        }}
-      >
-
-      <!-- Viper-->
-      <img 
-        class="role-img"
-        src="/assets/icons/viper.png"
-        alt=""
-        draggable="false"
-        
-        on:click={(event) => {
-          activateRole(event, "evil")
-        }}
-      >
-
-      <!-- Shapeshifter-->
-      <img 
-        class="role-img"
-        src="/assets/icons/shapeshifter.png"
-        alt=""
-        draggable="false"
-        
-        on:click={(event) => {
-          activateRole(event, "evil")
-        }}
-      >
-
-      <!-- Scientist-->
-      <img 
-        class="role-img"
-        src="/assets/icons/scientist.png"
-        alt=""
-        draggable="false"
-        
-        on:click={(event) => {
-          activateRole(event, "good")
-        }}
-      >
-
-      <!-- Detective-->
-      <img 
-        class="role-img"
-        src="/assets/icons/detective.png"
-        alt=""
-        draggable="false"
-        
-        on:click={(event) => {
-          activateRole(event, "good")
-        }}
-      >
-
-      <!-- Noisemaker-->
-      <img 
-        class="role-img"
-        src="/assets/icons/noisemaker.png"
-        alt=""
-        draggable="false"
-
-        on:click={(event) => {
-          activateRole(event, "good")
-        }}
-      >
-
-      <!-- Phantom-->
-      <img 
-        class="role-img"
-        src="/assets/icons/phantom.png"
-        alt=""
-        draggable="false"
-        
-        on:click={(event) => {
-          activateRole(event, "evil")
-        }}
-      >
+      {#each roles as role}
+        <img 
+          class="role-img"
+          src="/assets/icons/{role.id}.png"
+          alt=""
+          draggable="false"
+          
+          on:click={(event) => {
+            activateRole(event, [role.side])
+          }}
+        >
+      {/each}
 
     </div>
     <div 
@@ -695,47 +505,16 @@
       style="grid-area: box-5"
     >
       <h2>Map</h2>
-        <img 
-          class="skeld-btn"
-          src="/assets/icons/skeld.png" alt=""
-          on:click={() => selectMap("skeld")}
-          draggable="false"
-        >
 
+      <!-- Button of each map from list-->
+      	{#each maps as map}
         <img 
-          class="polus-btn"
-          src="/assets/icons/polus.png" alt=""
-          on:click={() => selectMap("polus")}
+          class="map-btn"
+          src="/assets/icons/{map}.png" alt=""
+          on:click={() => selectMap(map)}
           draggable="false"
         >
-
-        <img 
-          class="mira-btn"
-          src="/assets/icons/mira.png" alt=""
-          on:click={() => selectMap("mira")}
-          draggable="false"
-        >
-
-        <img 
-          class="airship-btn"
-          src="/assets/icons/airship.png" alt=""
-          on:click={() => selectMap("airship")}
-          draggable="false"
-        >
-
-        <img 
-          class="fungle-btn"
-          src="/assets/icons/fungle.png" alt=""
-          on:click={() => selectMap("fungle")}
-          draggable="false"
-        >
-
-        <img 
-          class="submerged-btn"
-          src="/assets/icons/submerged.png" alt=""
-          on:click={() => selectMap("submerged")}
-          draggable="false"
-        >
+        {/each}
     </div>
 
     <div 
@@ -767,53 +546,3 @@
   </div> <!-- close right panel-->
 </div>
 
-<style>
-/* can't move this to app.css for some reason */
-h1 {
-  height: 100%;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  color: white;
-  background-color: black;
-
-  border-style:solid;
-  border-width: 5px;
-  border-color: #3a3a3a;
-  
-  font-family: "VCR_OSD_MONO";
-  src: url("/assets/fonts/VCR_OSD_MONO.ttf") format("truetype");
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-
-  text-transform: uppercase;
-}
-
-h2 {
-  height: 100%;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  color: white;
-  background-color: #3a3a3a;
-  
-  font-family: "VCR_OSD_MONO";
-  src: url("/assets/fonts/VCR_OSD_MONO.tff") format("truetype");
-  font-size: medium;
-  font-weight: 600;
-  letter-spacing: 1px;
-
-  text-transform: uppercase;
-}
-
-/* written to take up whole 1st row of a grid */
-.grid h2 {
-  margin-top: 0;
-  grid-column: 1 / -1;
-}
-</style>

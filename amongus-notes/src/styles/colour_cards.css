@@ -1,0 +1,54 @@
+/* holds bean image */
+.colour-card {
+    width: 64px;
+    height: 64px;
+}
+
+/* image contained within colour card element */
+.colour-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* holds colour card along with extra menu elements */
+.image-wrapper {
+    display: grid;
+    position: relative;
+
+    width: 64px;
+    height: 96px;
+
+    grid-template-columns: repeat(3, 32px);
+    grid-template-rows: 32px 32px 32px;
+
+    grid-template-areas: 
+    "img-box img-box box-alignment"
+    "img-box img-box box-alignment"
+    "dropdown-box dropdown-box dropdown-box";
+}
+
+/* dropdown for image wrapper cards */
+.status-select {
+    font-size: 15px;
+    width: 96px;
+
+    background: rgb(0, 0, 0);
+    color: white;
+
+    border-top-style: none;
+    border-left-style: none;
+    border-width: 3px;
+    border-color: #b5b5b5;
+
+    /* add custom background image to right of selects as default appearance was overriden and removed the arrow */
+    background-image: url("/assets/icons/dropdown.png");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+
+    /* override appearances it tries to automatically focr */
+    border-radius: 0px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}

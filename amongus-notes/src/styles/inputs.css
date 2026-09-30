@@ -1,0 +1,78 @@
+/* text area for notes panel */
+.notes-input {
+    background-color: black;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    border-color: #3a3a3a;
+
+    /* prevent resize */
+    resize: none;
+}
+
+/* checkbox inputs */
+input[type="checkbox"] {
+    appearance: none;
+    border-style: solid;
+    border-color: #3a3a3a;
+    background-color: red;
+    cursor: pointer;
+}
+
+/* checked checkbox inputs */
+input[type="checkbox"]:checked {
+    background-color: lime;
+}
+
+/* number inputs */
+input[type="number"] {
+    border-style: none;
+    border-color: black;
+    background-color: #3a3a3a;
+}
+
+input {
+  /* override appearances it tries to automatically force */
+    border-radius: 0px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+/* mod options button */
+.mod-options {
+    appearance: none;
+
+    /* hide text and bg colour shift */
+    color: transparent;
+    background-color: transparent;
+    border-style: none;
+
+    background-image: url("/assets/icons/settings.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+
+    /* override appearances it tries to automatically force */
+    border-radius: 0px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+/* buttons within options grid */
+.option-btn {
+    width: 64px; 
+    height: 64px; 
+}
+
+/* mod options hovering over button */
+.mod-options:hover{
+    background-color: black;
+}
+
+/* inputs within role grid */
+.roles-grid input {
+    width: 64px;
+    height: 64px;
+}

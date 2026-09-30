@@ -1,0 +1,35 @@
+/* box with background image to indicate that dropping is possible */
+.insert-visual {
+    background-color: black;
+
+    width: 90%;
+    height: 90%;
+    justify-self: center;
+    align-self: center;
+
+    border-style: dashed;
+    border-color: #3a3a3a;
+
+    background-image: url("/assets/icons/plus.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+/* setup css for dragged images */
+.drag-ghost {
+    position: fixed;
+
+    width: 64px;
+    height: 64px;
+
+    opacity: 0.5;
+
+    pointer-events: none;
+
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

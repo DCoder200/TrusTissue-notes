@@ -1,0 +1,62 @@
+/* holds the left, middle and right sections */
+.main-layout {
+    display: grid;
+
+    background-color: black;
+
+    grid-template-columns: 272px 32px 400px 256px;
+    grid-template-rows: 608px;
+    
+    grid-template-areas: 
+    "left box-spacer middle right"
+}
+
+/* holds colour picker */
+.left-layout {
+    display: grid;
+
+    grid-template-columns: 272px;
+    grid-template-rows: 32px 576px;
+
+    grid-template-areas:
+    "colour-picker-header"
+    "colour-picker";
+}
+
+/* holds noted panel and notes */
+.middle-layout {
+    display: grid;
+
+    grid-template-columns: 400px;
+    grid-template-rows: 64px 384px 160px;
+
+    grid-template-areas: 
+    "noted-header"
+    "noted"
+    "notes";
+}
+
+/* holds setting and role notes */
+.right-layout {
+    display: grid;
+
+    grid-template-columns: 192px 64px;
+    grid-template-rows: 224px 224px 160px;
+
+    grid-template-areas:
+    "box-4 box-4"
+    "box-6 box-6"
+    "box-5 box-7";
+}
+
+/* Spacer between colour picker and noted colours */
+.spacer {
+    grid-template-columns: 32px;
+    grid-template-rows: 59px 394px 22px 133px;
+}
+
+/* used to set background colour of each spacer cell */
+.filler {
+    border-width: 5px;
+    border-color: #3a3a3a;
+}
