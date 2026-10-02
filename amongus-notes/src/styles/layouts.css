@@ -47,6 +47,10 @@
     "box-4 box-4"
     "box-6 box-6"
     "box-5 box-7";
+
+    border-left-style: solid;
+    border-color:#3a3a3a;
+    border-width: 5px;
 }
 
 /* Spacer between colour picker and noted colours */

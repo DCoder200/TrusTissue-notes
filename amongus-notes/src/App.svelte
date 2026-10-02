@@ -110,7 +110,7 @@
     style="grid-area: middle;"
   >
 
-    <h1 style="grid-area: noted-header; border-left-style: none;">Noted</h1>
+    <h1 style="grid-area: noted-header; border-left-style: none; border-right-style: none;">Noted</h1>
 
     <div 
       class="grid noted-grid"
@@ -129,7 +129,8 @@
           gridName="noted"
           {openNotes}
           {selectedMod}
-        />
+        >
+        </ColourCardWrapper>
       {/each}
 
       <div class="insert-visual"></div>
@@ -140,7 +141,7 @@
       style="grid-area: notes"
     >
 
-      <h1 style="border-left-style: none; font-size: 24px;">Notes for {notedColours.selectedColour?.name || 'Colour'}</h1>
+      <h1 style="border-left-style: none; border-right-style: none; font-size: 24px;">Notes for {notedColours.selectedColour?.name || 'Colour'}</h1>
 
       <!-- Uses note_area component-->
       <NoteArea {writeNote}></NoteArea>

@@ -71,6 +71,13 @@
     border-color: #b5b5b5;
 }
 
+/* hover indicator for the alignment item buttons */
+.alignment-item:hover{
+    border-style: solid;
+    border-color: black;
+
+}
+
 /* holds lobby settings */
 .lobby-settings-grid {
     background-color: #1a1a1a;
@@ -91,11 +98,21 @@
 
 /* Used by taskbar updates selector */
 .lobby-settings-grid select {
+
+    /* 
+    last is necessary to fully enforce center here 
+    it controls alignment of last bit of text in an element
+    */
+    
+    text-align: center;
+    text-align-last: center;
+
+    outline: none;
     border-style: none;
     border-bottom-style: none;
     border-color: black;
     background-color: #3a3a3a;
-    font-size: 70%;
+    font-size: 90%;
 
     /* override appearances it tries to automatically force */
     border-radius: 0px;

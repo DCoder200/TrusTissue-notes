@@ -6,6 +6,8 @@
     font-weight: 600;
     border-color: #3a3a3a;
 
+    outline: none;
+
     /* prevent resize */
     resize: none;
 }
@@ -14,6 +16,7 @@
 input[type="checkbox"] {
     appearance: none;
     border-style: solid;
+    margin: 0;
     border-color: #3a3a3a;
     background-color: red;
     cursor: pointer;
@@ -32,7 +35,11 @@ input[type="number"] {
 }
 
 input {
+    text-align: center;
+    font-size: large;
+
   /* override appearances it tries to automatically force */
+    outline: none;
     border-radius: 0px;
     appearance: none;
     -webkit-appearance: none;
@@ -41,6 +48,7 @@ input {
 
 /* mod options button */
 .mod-options {
+    outline: none;
     appearance: none;
 
     /* hide text and bg colour shift */
@@ -64,6 +72,10 @@ input {
 .option-btn {
     width: 64px; 
     height: 64px; 
+}
+
+.option-btn:hover{
+    background-color: black;
 }
 
 /* mod options hovering over button */

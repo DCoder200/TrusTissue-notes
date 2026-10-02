@@ -32,6 +32,9 @@
 .status-select {
     font-size: 15px;
     width: 96px;
+    
+    /* remove default outline when selecting */
+    outline: none;
 
     background: rgb(0, 0, 0);
     color: white;
@@ -51,4 +54,10 @@
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
+}
+
+.status-select:hover{
+    background-color: white;
+    color: black;
+    background-image: url("/assets/icons/dropdown_black.png");
 }

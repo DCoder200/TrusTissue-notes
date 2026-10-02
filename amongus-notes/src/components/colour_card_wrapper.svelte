@@ -48,8 +48,10 @@
 
         if (shade){
           card.style.backgroundColor = alignmentColours[colour.alignment]?.[shade];
+          alignmentGrid.style.backgroundColor = alignmentColours[colour.alignment]?.[shade];
         } else {
           card.style.backgroundColor = alignmentColours[colour.alignment]?.base;
+          alignmentGrid.style.backgroundColor = alignmentColours[colour.alignment]?.base;
         }
 
       } else {
@@ -59,12 +61,16 @@
 
     // change BG colour of alignment grid items
     if (alignmentGrid){
+  
       if (colour.alignment != "none"){
         alignmentItemBase.style.backgroundColor = alignmentColours[colour.alignment]?.base;
         alignmentItemDark.style.backgroundColor = alignmentColours[colour.alignment]?.dark;
+
+
       } else {
         alignmentItemBase.style.backgroundColor = "black"
         alignmentItemDark.style.backgroundColor = "black"
+        alignmentGrid.style.backgroundColor = "black";
       }
     }
   }
@@ -129,17 +135,19 @@
     style="grid-area: box-alignment"
   >
 
-    <div class="alignment-item alignment-item-dark"
+    <div class="alignment-item alignment-item-base"
+      style="border-bottom-left-radius: 1rem;"
       onclick={(event) => {
-        changeCardColour(event, colour, "dark")
+        changeCardColour(event, colour, "base")
       }}
     >
     </div>
 
-    <div class="alignment-item alignment-item-base"
+    <div class="alignment-item alignment-item-dark"
+      style="border-top-left-radius: 1rem;"
 
       onclick={(event) => {
-        changeCardColour(event, colour, "base")
+        changeCardColour(event, colour, "dark")
       }}
     >
     </div>

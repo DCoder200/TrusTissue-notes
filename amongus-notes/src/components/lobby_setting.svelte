@@ -16,6 +16,7 @@
     <input 
         style="grid-area: imp-input; width: 64px"
         type="number" id="imposters" name="imposters" min="0" max="5"
+        placeholder={"0"}
     >
 
 {:else if setting == "taskbar_updates"}
@@ -48,5 +49,6 @@
         style="grid-area: vent-cooldown-input; width: 64px"
         type="number" id="vent-cooldown" name="vent-cooldown" min="5" max="60" step="5"
         disabled={counts.engineers === 0}
+        placeholder={counts.engineers === 0 ? "N/A" : ""}
     >
 {/if}

@@ -66,12 +66,6 @@ label {
     padding-left: 32px;
 }
 
-/* used by icons for roles in roles tab */
-.role img {
-    height: 32px;
-    width: 32px
-}
-
 /* remove margin from top and make sure display is flex to center text vertically and make sure the header doesn't push against top */
 h1 {
     height: 100%;
@@ -113,7 +107,7 @@ h2 {
 }
 
 /* written to take up whole row of a grid */
-
+/* this is a quick hack to get a few headers into some of the grid sections without specifying space */
 .grid h2 {
     margin-top: 0;
     grid-column: 1 / -1; 
