@@ -17,7 +17,7 @@ const touColourImages = import.meta.glob(
 );
 
 // create easily indexable array of colours 
-  // map file name and source to name and path for each colour within array
+// map file name and source to name and path for each colour within array
 export const base_colours = Object.entries(colourImages).map(([path, module]) => {
 const name = path.split('/').pop().replace('.png', '');
 
@@ -60,8 +60,6 @@ return {
 });
 
 
-// Alignment colours 
-// becomes the correct colour for whatever argument is added
 export const alignmentColours = {
     imposter: {
         base: "red",
@@ -73,6 +71,6 @@ export const alignmentColours = {
     },
     neutral: {
         base: "rgb(255, 0, 255)",
-        dark: "rgb(128, 0, 128"
+        dark: "rgb(128, 0, 128)"
     }
 };

@@ -62,7 +62,7 @@
 .alignment-grid {
     grid-template-columns: 32px;
     grid-template-rows: 32px 32px;
-    background-color: red;
+    background-color: black;
 }
 
 /* box containing single colour option placed within alignment grid */

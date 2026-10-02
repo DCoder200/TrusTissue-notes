@@ -1,3 +1,8 @@
+  import {notedColours} from "../sharedStates/notedColours.svelte.js"
+import {counts} from "../sharedStates/counts.svelte";
+  
+  
+  
   // map selection
   export function selectMap(mapName){
     console.log(mapName)
@@ -16,4 +21,13 @@
       event.currentTarget.style.backgroundColor === bg_colour
         ? "transparent"
         : bg_colour;
+  }
+
+
+  // resets positions, clears notes, returns text area placeholder text, unselects colour
+  export function reset(){
+    notedColours.noted = []
+    document.getElementById("noteText").value = ""
+    notedColours.selectedColour = null
+    counts.venters = 0
   }
